@@ -1,0 +1,746 @@
+linked in : Vishwanath B Ramachandra Rao
+email : vishymails@gmail.com
+hand phone : 9845294285
+
+
+
+
+
+
+import cohere 
+import pandas as pd
+import numpy as np
+import altair as alt
+import textwrap as tr
+
+
+
+
+co =  cohere.Client('')
+
+response = co.generate(
+    model="command",
+    prompt="Translate the following English text to French 'Hello All'",
+    max_tokens=100
+)
+
+print(response.generations[0].text)
+
+
+
+
+
+
+
+prompt = "Hello World is a program that "
+
+response = co.generate(
+    model="command",
+    prompt= prompt,
+    max_tokens=200,
+    temperature = 0.4
+)
+
+output = response.generations[0].text
+output = tr.fill(output, width=100)
+print(output)
+
+
+
+
+
+
+
+Write the first paragraph of a blog post given a blog title.
+--
+Blog Title: Best Activities in Toronto
+First Paragraph: Looking for fun things to do in Toronto? When it comes to exploring Canada's
+largest city, there's an ever-evolving set of activities to choose from. Whether you're looking to
+visit a local museum or sample the city's varied cuisine, there is plenty to fill any itinerary. In
+this blog post, I'll share some of my favorite recommendations
+--
+Blog Title: Mastering Dynamic Programming
+First Paragraph: In this piece, we'll help you understand the fundamentals of dynamic programming,
+and when to apply this optimization technique. We'll break down bottom-up and top-down approaches to
+solve dynamic programming problems.
+--
+Blog Title: Learning to Code with Hello, World!
+First Paragraph:
+
+
+
+
+
+
+
+
+
+"""
+  Generate text given a prompt
+  Arguments:
+    base_prompt(str): the base prompt containing the examples
+    current_prompt(str): the new topic to generate
+  Returns:
+    generation(str): the newly generated output text
+  """
+
+
+
+
+
+
+# The base prompt
+base_prompt = """
+Write the first paragraph of a blog post given a blog title.
+--
+Blog Title: Best Activities in Toronto
+First Paragraph: Looking for fun things to do in Toronto? When it comes to exploring Canada's
+largest city, there's an ever-evolving set of activities to choose from. Whether you're looking to
+visit a local museum or sample the city's varied cuisine, there is plenty to fill any itinerary. In
+this blog post, I'll share some of my favorite recommendations
+--
+Blog Title: Mastering Dynamic Programming
+First Paragraph: In this piece, we'll help you understand the fundamentals of dynamic programming,
+and when to apply this optimization technique. We'll break down bottom-up and top-down approaches to
+solve dynamic programming problems.
+--
+Blog Title: Learning to Code with Hello, World!
+First Paragraph:
+
+
+
+
+
+
+
+
+"How to Grow in Your Career",
+          "The Habits of Great Software Developers",
+          "Ideas for a Relaxing Weekend"
+
+
+
+
+
+
+
+
+
+def generate_text(base_prompt, current_prompt) :
+  """
+  Generate text given a prompt
+  Arguments:
+    base_prompt(str): the base prompt containing the examples
+    current_prompt(str): the new topic to generate
+  Returns:
+    generation(str): the newly generated output text
+  """
+
+  response = co.generate(
+      model = "command",
+      prompt = base_prompt + current_prompt,
+      max_tokens = 75,
+      temperature = 0.4,
+      stop_sequences=["--"]
+  )
+
+  generation = response.generations[0].text
+
+  return generation
+  
+
+
+
+
+
+
+
+
+
+# The base prompt
+base_prompt = """
+Write the first paragraph of a blog post given a blog title.
+--
+Blog Title: Best Activities in Toronto
+First Paragraph: Looking for fun things to do in Toronto? When it comes to exploring Canada's
+largest city, there's an ever-evolving set of activities to choose from. Whether you're looking to
+visit a local museum or sample the city's varied cuisine, there is plenty to fill any itinerary. In
+this blog post, I'll share some of my favorite recommendations
+--
+Blog Title: Mastering Dynamic Programming
+First Paragraph: In this piece, we'll help you understand the fundamentals of dynamic programming,
+and when to apply this optimization technique. We'll break down bottom-up and top-down approaches to
+solve dynamic programming problems.
+--
+Blog Title:"""
+
+
+
+topics = ["How to Grow in Your Career",
+          "The Habits of Great Software Developers",
+          "Ideas for a Relaxing Weekend"]
+
+paragraphs = []
+
+
+for topic in topics :
+  current_prompt = " " + topic + "\n" + "First Paragraph : "
+  para = generate_text(base_prompt, current_prompt)
+  para = para.strip().replace("--", "")
+  paragraphs.append(para)
+
+
+
+
+
+
+
+
+
+
+
+for topic, para in zip(topics, paragraphs) :
+  print(f"Topic : {topic}")
+  print(f"First Paragraph: {para}")
+  print("-"* 15)
+  
+
+
+
+
+
+
+Example("I’m so proud of you", "positive"), 
+            Example("What a great time to be alive", "positive"), 
+            Example("That’s awesome work", "positive"), 
+            Example("The service was amazing", "positive"), 
+            Example("I love my family", "positive"), 
+            Example("They don't care about me", "negative"), 
+            Example("I hate this place", "negative"), 
+            Example("The most ridiculous thing I've ever heard", "negative"), 
+            Example("I am really frustrated", "negative"), 
+            Example("This is so unfair", "negative"),
+            Example("This made me think", "neutral"), 
+            Example("The good old days", "neutral"), 
+            Example("What's the difference", "neutral"), 
+            Example("You can't ignore this", "neutral"), 
+            Example("That's how I see it", "neutral") 
+
+
+
+
+
+
+"Hello, world! What a beautiful day",
+        "It was a great time with great people",
+        "Great place to work",
+        "That was a wonderful evening",
+        "Maybe this is why",
+        "Let's start again",
+        "That's how I see it",
+        "These are all facts",
+        "This is the worst thing",
+        "I cannot stand this any longer",
+        "This is really annoying",
+        "I am just plain fed up"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+from cohere.responses.classify import Example
+
+
+examples = [Example("I’m so proud of you", "positive"), 
+            Example("What a great time to be alive", "positive"), 
+            Example("That’s awesome work", "positive"), 
+            Example("The service was amazing", "positive"), 
+            Example("I love my family", "positive"), 
+            Example("They don't care about me", "negative"), 
+            Example("I hate this place", "negative"), 
+            Example("The most ridiculous thing I've ever heard", "negative"), 
+            Example("I am really frustrated", "negative"), 
+            Example("This is so unfair", "negative"),
+            Example("This made me think", "neutral"), 
+            Example("The good old days", "neutral"), 
+            Example("What's the difference", "neutral"), 
+            Example("You can't ignore this", "neutral"), 
+            Example("That's how I see it", "neutral") 
+    
+]
+
+
+inputs = ["Hello, world! What a beautiful day",
+        "It was a great time with great people",
+        "Great place to work",
+        "That was a wonderful evening",
+        "Maybe this is why",
+        "Let's start again",
+        "That's how I see it",
+        "These are all facts",
+        "This is the worst thing",
+        "I cannot stand this any longer",
+        "This is really annoying",
+        "I am just plain fed up"
+    
+]
+
+
+
+
+def classify_text(inputs, examples) :
+  response = co.classify(
+      model = 'embed-english-v2.0',
+      inputs=inputs,
+      examples = examples
+  )
+
+  return response.classifications
+
+
+
+
+predictions = classify_text(inputs, examples)
+
+classes = ["positive", "negative", "neutral"]
+
+for inp, pred in zip(inputs, predictions) :
+  class_pred = pred.predictions[0]
+  class_idx = classes.index(class_pred)
+  class_conf = pred.confidences[0]
+
+  print(f"Input : {inp}")
+  print(f"Prediction : {class_pred}")
+  print(f"Confidence : {class_conf:.2f}")
+  print("-"*15)
+  
+
+
+
+
+
+
+
+# 3.0 example 
+
+
+def classify_text(inputs, examples) :
+  response = co.classify(
+      model = 'embed-english-v3.0',
+      inputs=inputs,
+      examples = examples
+  )
+
+  return response.classifications
+
+
+
+
+predictions = classify_text(inputs, examples)
+
+classes = ["positive", "negative", "neutral"]
+
+for inp, pred in zip(inputs, predictions) :
+  class_pred = pred.predictions[0]
+  class_idx = classes.index(class_pred)
+  class_conf = pred.confidences[0]
+
+  print(f"Input : {inp}")
+  print(f"Prediction : {class_pred}")
+  print(f"Confidence : {class_conf:.2f}")
+  print("-"*15)
+  
+  
+
+
+"Carson City is the capital city of the American state of Nevada. At the 2010 United States Census, Carson City had a population of 55,274.",
+    "The Commonwealth of the Northern Mariana Islands is a group of islands in the Pacific Ocean that are a political division controlled by the United States. Its capital is Saipan.",
+    "Charlotte Amalie is the capital and largest city of the United States Virgin Islands. It has about 20,000 people. The city is on the island of Saint Thomas.",
+    "Washington, D.C. (also known as simply Washington or D.C., and officially as the District of Columbia) is the capital of the United States. It is a federal district. The President of the USA and many major national government offices are in the territory. This makes it the political center of the United States of America.",
+    "West Virginia is a state in the Appalachian region of the United States. Its capital and largest city is Charleston. It is often abbreviated W. Va. or simply WV.",
+    "Capital punishment (the death penalty) has existed in the United States since before the United States was a country. As of 2017, capital punishment is legal in 30 of the 50 states. The federal government (including the United States military) also uses capital punishment.",
+    "North Dakota is a state in the United States. 672,591 people lived in North Dakota in the year 2010. The capital and seat of government is Bismarck.",
+    "Kentucky is a state in the United States. Its capital is Frankfort. It touches the states of Missouri (by the Mississippi River), Illinois, Indiana, Ohio, West Virginia (by the Ohio River), Tennessee and Virginia. There are many rivers in Kentucky",
+    "Micronesia, officially the Federated States of Micronesia, is an island nation in the Pacific Ocean, northeast of Papua New Guinea. The country is a sovereign state in free association with the United States. The capital city of Federated States of Micronesia is Palikir.",
+    "Utah is a state in the west United States. The capital and largest city is Salt Lake City. Utah became a state in the U.S. on January 4, 1896."
+
+
+
+
+
+
+
+
+
+'''"The killer whale or orca (Orcinus orca) is a toothed whale belonging to the oceanic dolphin family, of which it is the largest member"
+In summary: "The killer whale or orca is the largest type of dolphin"
+---
+"It is recognizable by its black-and-white patterned body" 
+In summary:"Its body has a black and white pattern"
+---
+"Killer whales have a diverse diet, although individual populations often specialize in particular types of prey" 
+In summary:"'''
+
+
+
+"How to get in touch with Bill Gates",
+           "Comment entrer en contact avec Bill Gates",
+           "Cara menghubungi Bill Gates"
+
+
+
+
+user_input_product = "a wireless headphone product named the CO-1T"
+user_input_keywords = '"bluetooth", "wireless", "fast charging"'
+user_input_customer = "a software developer who works in noisy offices"
+user_input_describe = "benefits of this product"
+
+
+
+
+
+context = """Think back to the last time you were working without any distractions in the office. That's right...I bet it's been a while. \
+With the newly improved CO-1T noise-cancelling Bluetooth headphones, you can work in peace all day. Designed in partnership with \
+software developers who work around the mayhem of tech startups, these headphones are finally the break you've been waiting for. With \
+fast charging capacity and wireless Bluetooth connectivity, the CO-1T is the easy breezy way to get through your day without being \
+overwhelmed by the chaos of the world."""
+
+
+
+
+prompt="""Turn the following message to a virtual assistant into the correct action:
+Send a message to Alison to ask if she can pick me up tonight to go to the concert together"""
+
+
+
+
+user_input = "Send a message to Alison to ask if she can pick me up tonight to go to the concert together"
+
+prompt=f"""Turn the following message to a virtual assistant into the correct action:
+
+Message: Ask my aunt if she can go to the JDRF Walk with me October 6th
+Action: can you go to the jdrf walk with me october 6th
+
+Message: Ask Eliza what should I bring to the wedding tomorrow
+Action: what should I bring to the wedding tomorrow
+
+Message: Send message to supervisor that I am sick and will not be in today
+Action: I am sick and will not be in today
+
+Message: {user_input}"""
+
+
+
+
+prompt=f"""
+Q: Roger has 5 tennis balls. He buys 2 more cans of tennis balls. Each can has 3 tennis balls. \
+How many tennis balls does he have now?
+A: The answer is 11.
+Q: The cafeteria had 23 apples. If they used 20 to make lunch and bought 6 more, how many apples do they have?
+A:"""
+
+
+prompt="""Turn the following information into a table with columns Invoice Number, Merchant Name, and Account Number.
+Bank Invoice: INVOICE #0521 MERCHANT ALLBIRDS ACC XXX3846
+Bank Invoice: INVOICE #6781 MERCHANT SHOPPERS ACC XXX9877
+Bank Invoice: INVOICE #0777 MERCHANT CN TOWER ACC XXX3846
+"""
+
+
+
+
+
+user_input = "education"
+
+prompt = f"""Generate a startup idea for this industry: {user_input}
+First, describe the problem to be solved.
+Next, describe the target audience of this startup idea.
+Next, describe the startup idea and how it solves the problem for the target audience.
+Next, provide a name for the given startup.
+
+Use the following format:
+Industry: <the given industry>
+The Problem: <the given problem>
+Audience: <the given target audience>
+Startup Idea: <the given idea>
+Startup Name: <the given name>"""
+
+
+
+
+
+prompt=f"""Q: The cafeteria had 23 apples. If they used 20 to make lunch and bought 6 more, \
+how many apples do they have?
+A: Let's think step by step."""
+
+
+
+
+
+user_input_position = "modern centre forward"
+
+prompt = f"""Describe the ideal {user_input_position}. In particular, describe the following characteristics: \
+pace, skill, and awareness.
+
+Pace:"""
+
+response = generate_text(prompt, temp=0.9)
+print(response)
+
+
+
+
+
+
+
+
+
+package org.example;
+
+public class StatementExample {
+
+    public static void main(String[] args) {
+
+        // please give me if else statement example
+
+        //example 1
+        int a = 10;
+        int b = 20;
+
+        if (a > b) {
+            System.out.println("a is greater than b");
+        } else {
+            System.out.println("b is greater than a");
+        }
+
+        //example 2
+
+        int c = 30;
+        int d = 40;
+
+        if (c > d) {
+            System.out.println("c is greater than d");
+        } else if (c < d) {
+            System.out.println("c is less than d");
+        } else {
+            System.out.println("c is equal to d");
+        }
+
+        //example 3 with below variables
+
+        String s1 = "bvr";
+        String s2 = "bvr";
+
+        if (s1.equals(s2)) {
+            System.out.println("s1 is equal to s2");
+        } else {
+            System.out.println("s1 is not equal to s2");
+        }
+
+
+        //example 1 of for loop
+
+        for (int i = 0; i < 5; i++) {
+            System.out.println("i: " + i);
+        }
+
+        //please give me different example of for loop with different variables
+
+        //example 2 of for loop
+
+        for (int j = 5; j > 0; j--) {
+            System.out.println("j: " + j);
+        }
+
+        //example 3 of for loop with lambda expression on a list of strings
+
+        java.util.List<String> list = java.util.Arrays.asList("a", "b", "c", "d");
+        for (String s : list) {
+            System.out.println("s: " + s);
+        }
+
+
+        //give me an example of complex while loop with list size of 30 and print only even numbers
+
+        //example 1 of while loop
+
+        java.util.List<Integer> list1 = new java.util.ArrayList<>();
+
+        // add samples entries to above list object
+
+        for (int i = 1; i <= 30; i++) {
+            list1.add(i);
+        }
+
+        // display all values
+        System.out.println("List: " + list1);
+
+        // display only even numbers
+
+        int i = 0;
+        while (i < list1.size()) {
+            if (list1.get(i) % 2 == 0) {
+                System.out.println("Even number: " + list1.get(i));
+            }
+            i++;
+        }
+
+
+    }
+}
+
+
+
+
+
+
+
+
+
+
+@startuml
+
+'write a plantuml code for creating Shapable Interface 
+
+interface Shapable {
+    + void draw()
+    + void resize()
+}
+
+note left of Shapable
+    Shapable interface has two methods draw and resize
+end note
+
+
+' write abstract Shape class that implements Shapable interface
+
+abstract class Shape {
+    - int x
+    - String : color
+    + Shape(int x, String color)
+    + setColor(String color)
+    + getColor()
+    - int y
+    - String color
+    + Shapable shapable
+    + void draw()
+    + void resize()
+}
+
+
+' write abstract Shape1 class extending Shapable interface with name attribute 
+
+abstract class Shape1 implements Shapable{
+    - String name
+    + Shape1(String name)
+    + setName(String name)
+    + getName()
+}
+
+note right of Shape1
+    Shape1 class has name attribute and implements Shapable interface
+end note
+
+'write a class for circle extending Shape1 class with radius attribute
+
+class Circle extends Shape1{
+    - int radius
+    + Circle(int radius)
+    + draw()
+    + resize()
+}
+
+'write a class for rectangle extending Shape1 class with width and height attribute
+
+class Rectangle extends Shape1{
+    - int width
+    - int height
+    + Rectangle(int width, int height)
+    + draw()
+    + resize()
+}
+
+output = replicate.run(
+  "stability-ai/sdxl:39ed52f2a78e934b3ba6e2a89f5b1c712de7dfea535525255b1aa35c5565e08b",
+  input={"prompt": "an iguana on the beach, pointillism"}
+)
+
+@enduml
+
+* ================ VS CODE HTML PROJECT ==============
+
+@workspace /new create an HTML project called bucks2bar with the latest version of bootstrap
+
+give me the code for a dark bootstrap navbar
+
+** after selecting the nav bar section and clicking the copilot Star, type below two commands:
+
+increase the font size of the title
+remove all the elements except the title
+
+
+generate 2 bootstrap tabs, the first one will have the label "Data" and the second one will have the label "Chart". Add placeholder text for each
+
+@workspace where are the data and chart tabs are being redered
+
+
+
+
+
+
+
+
+
+%pip install --upgrade pip
+%pip install --disable-pip-version-check \
+    torch==1.13.1 \
+    torchdata==0.5.1 --quiet
+
+%pip install \
+    transformers==4.27.2 \
+    datasets==2.11.0 \
+    evaluate==0.4.0 \
+    rouge_score==0.1.2 \
+    loralib==0.1.1 \
+    peft==0.3.0 --quiet
+
+
+
+
+
+
+sdxl:39ed52f2a78e934b3ba6e2a89f5b1c712de7dfea535525255b1aa35c5565e08b
+
+
+
+
+
+andreasjansson/blip-2:4b32258c42e9efd4288bb9910bc532a69727f9acd26aa08e175713a0a857a608
+
+
+
+
+
+
+
+sdxl = replicate.models.get("stability-ai/sdxl").versions.get("39ed52f2a78e934b3ba6e2a89f5b1c712de7dfea535525255b1aa35c5565e08b")
+esrgan = replicate.models.get("nightmareai/real-esrgan").versions.get("42fed1c4974146d4d2414e2be2c5277c7fcf05fcc3a73abf41610695738c1d7b")
+image = replicate.predictions.create(version=sdxl, input={"prompt": "avocado armchair"})
+image.wait()
+upscaled_image = replicate.predictions.create(version=esrgan, input={"image": image.output[0]})
+upscaled_image.wait()
+
+
+from IPython.display import Image
+Image(url=upscaled_image.output)
